@@ -16,8 +16,9 @@ cat << eof
 	3) delete a user
 	4) print disk space
 	5) print memory space
-	6) quit
-	7) return main menu
+	6) open linux command on brower
+	7) `shellecho "quit" 31 40`
+	8) `shellecho "return main menu" 31 40`
 
 ##########################################################
 

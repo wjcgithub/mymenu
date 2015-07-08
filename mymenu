@@ -1,6 +1,7 @@
 #!/bin/bash
 #mymenu
 . func.sh
+. linux.sh
 clear
 menu
 
@@ -71,12 +72,16 @@ do
 			shellecho "$str" 30 47
 			;;
 
-		6)
+    6)
+      linux_command
+      ;;  
+
+		7)
 			shellecho 'quit successfully!!' 30 47
 			break
 			;;
 
-		7)
+		8)
 			clear
 			menu
 			;;
