@@ -1,0 +1,23 @@
+#!/bin/bash
+#mymenu
+. ./include/common
+. ./include/func
+. ./include/linux
+. ./include/ui
+clear
+menu
+
+while true
+do
+    read -p "please input a option:" option
+
+    case $level in
+        1)
+            execmainmenu $option
+            ;;
+
+        2)
+            execworkspace $option
+            ;;
+    esac
+done

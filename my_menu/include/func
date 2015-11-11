@@ -1,0 +1,196 @@
+#!/bin/bash
+level=1
+
+function menu(){
+name="我的菜单"
+author="create for wjc"
+
+cat << eof
+
+##########################################################
+
+                 `echo -e "\033[31;40m $name \033[0m"`
+
+##########################################################
+ `echo -e  "\033[31;40m author: \033[0m"`                                `echo -e  "\033[31;40m$author\033[0m"`                       
+##########################################################
+
+     1) add user
+     2) set password for user
+     3) delete a user
+     4) print disk spacemZ	
+     5) print memory space
+     6) open linux command on brower
+     7) work space
+     98) `shellecho "quit" 31 40`
+     99) `shellecho "return main menu" 31 40`
+
+##########################################################
+
+
+eof
+}
+
+function execmainmenu(){
+    case $1  in
+        1)
+            read -p "input a user's name:" name
+            if [ ! -e err.log ]
+            then
+                touch err.log
+            fi
+
+            echo "" > err.log
+            useradd $name &> err.log
+
+            if [ $? -eq 0 ]
+            then
+                shellecho  "user ${name} is created successfully!!" 32 40
+            else
+                err=`cat err.log`
+                shellecho "user ${name} is created fail!!" 31 40
+                shellecho "error reason is:" 30 47
+                shellecho "$err" 31 40
+            fi
+            ;;
+
+        2)
+            read -p "input user's name: " name
+            read -p "input user ${name} password: " passwd
+            echo $passwd | passwd --stdin $name &> err.log
+
+            if [ $? -eq 0 ]
+            then
+                shellecho  "${name}'s password is set successfully!!" 32 40
+            else
+                err=`cat err.log`
+                shellecho "${name}'s password is set fail!!" 31 40
+                shellecho "error reason is:" 30 47
+                shellecho "$err" 31 40
+            fi
+            ;;
+
+        3)
+            read -p "input user's name: " name
+            userdel -r $name &> err.log
+
+            if [ $? -eq 0 ]
+            then
+                shellecho  "${name}'s delete successfully!!" 32 40
+            else
+                err=`cat err.log`
+                shellecho "${name}'s delete fail!!" 31 40
+                shellecho "error reason is:" 30 47
+                shellecho "$err" 31 40
+            fi
+            ;;
+
+        4)
+            str=`df -Th`
+            shellecho "$str" 30 47
+            ;;
+
+        5)
+            str=`free -m`
+            shellecho "$str" 30 47
+            ;;
+
+        6)
+            linux_command
+            ;;  
+
+        7)
+            showworkspace
+            ;;    
+
+        98)
+            shellecho 'quit successfully!!' 30 47
+            break
+            ;;
+
+        99)
+            clear
+            menu
+            ;;
+
+
+    esac
+
+}
+
+
+function showworkspace(){
+$((level++))
+clear
+
+cat << eof
+##########################################################
+
+                 `echo -e "\033[31;40m $name \033[0m"`
+
+##########################################################
+ `echo -e  "\033[31;40m author: \033[0m"`                                `echo -e  "\033[31;40m$author\033[0m"`                       
+##########################################################
+
+     1) open service info dir
+     2) open service info 
+     3) start lnmp
+     4) start redis
+     98) `shellecho "quit" 31 40`
+     99) `shellecho "return main menu" 31 40`
+
+##########################################################
+
+
+eof
+}
+
+function execworkspace(){
+    
+    case $1  in
+        1)
+            servicedir='/media/evolution/000B8DBB00042CDF/公司/睿仁'
+            if [[ -d $servicedir ]]; then
+                nautilus $servicedir
+            fi
+            ;;
+
+        2)
+            serviceinfo='/media/evolution/000B8DBB00042CDF/公司/睿仁/服务器相关1.txt'
+            if [[ -f $serviceinfo ]]; then
+                gedit --encoding=utf-8 $serviceinfo
+            fi
+            ;;
+
+        3) 
+            num=`ps -ef | grep nginx | wc -l`
+            if [[ $num > 0 ]]; then
+                sudo lnmp restart
+            else
+                sudo lnmp start
+            fi
+            ;;
+
+        4) 
+            num=`ps -ef | grep redis | wc -l`
+            echo $num
+            if [[ $num > 0 ]]; then
+                sudo /etc/init.d/redis restart
+            else
+                sudo /etc/init.d/redis start
+            fi
+            ;;    
+
+        98)
+            shellecho 'quit successfully!!' 30 47
+            break
+            ;;
+
+        99)
+            $((level=1))
+            clear
+            menu
+            ;;
+
+    esac
+}
